@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Викторина StudyBuddy AI</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f8ff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .quiz-container {
+      max-width: 600px;
+      background: #fff;
+      margin: 50px;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    .question {
+      font-size: 18px;
+      margin: 20px 0;
+    }
+
+    .answers button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: none;
+      background-color: #e0e0e0;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .answers button:hover {
+      background-color: #d0d0ff;
+    }
+
+    .answers button.correct {
+      background-color: #90ee90;
+    }
+
+    .answers button.wrong {
+      background-color: #ff7f7f;
+    }
+
+    .score {
+      font-size: 20px;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .restart {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .restart button {
+      padding: 10px 20px;
+      background-color: #4682b4;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .restart button:hover {
+      background-color: #315f7c;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="quiz-container">
+    <h1>Викторина: StudyBuddy AI</h1>
+    <div id="question" class="question">Загрузка вопроса...</div>
+    <div class="answers" id="answers"></div>
+    <div class="score" id="score">Очки: 0</div>
+    <div class="restart" id="restart" style="display: none;">
+      <button onclick="restartQuiz()">Начать заново</button>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        question: "Что такое StudyBuddy AI?",
+        answers: ["Учебное приложение с ИИ", "Онлайн-магазин", "Музыкальный плеер", "Соцсеть для общения"],
+        correct: 0
+      },
+      {
+        question: "Какая основная функция StudyBuddy AI?",
+        answers: ["Генерация музыки", "Помощь в обучении", "Редактирование фото", "Создание игр"],
+        correct: 1
+      },
+      {
+        question: "Кто является целевой аудиторией StudyBuddy AI?",
+        answers: ["Программисты", "Студенты и школьники", "Музыканты", "Писатели"],
+        correct: 1
+      },
+      {
+        question: "Что делает StudyBuddy AI уникальным?",
+        answers: ["Он работает без интернета", "Он адаптируется под уровень знаний", "Он продаёт книги", "Он содержит рекламу"],
+        correct: 1
+      },
+      {
+        question: "Можно ли использовать StudyBuddy AI для самоподготовки?",
+        answers: ["Да", "Нет", "Только в выходные", "Только с преподавателем"],
+        correct: 0
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    function showQuestion() {
+      const q = questions[currentQuestion];
+      document.getElementById("question").textContent = q.question;
+      const answersDiv = document.getElementById("answers");
+      answersDiv.innerHTML = "";
+      q.answers.forEach((ans, idx) => {
+        const btn = document.createElement("button");
+        btn.textContent = ans;
+        btn.onclick = () => checkAnswer(idx);
+        answersDiv.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(selected) {
+      const buttons = document.querySelectorAll("#answers button");
+      buttons.forEach((btn, i) => {
+        btn.disabled = true;
+        if (i === questions[currentQuestion].correct) {
+          btn.classList.add("correct");
+        } else if (i === selected) {
+          btn.classList.add("wrong");
+        }
+      });
+
+      if (selected === questions[currentQuestion].correct) {
+        score++;
+      }
+
+      document.getElementById("score").textContent = "Очки: " + score;
+
+      setTimeout(() => {
+        currentQuestion++;
+        if (currentQuestion < questions.length) {
+          showQuestion();
+        } else {
+          document.getElementById("question").textContent = "Тест завершён!";
+          document.getElementById("answers").innerHTML = "";
+          document.getElementById("restart").style.display = "block";
+        }
+      }, 1000);
+    }
+
+    function restartQuiz() {
+      currentQuestion = 0;
+      score = 0;
+      document.getElementById("score").textContent = "Очки: 0";
+      document.getElementById("restart").style.display = "none";
+      showQuestion();
+    }
+
+    showQuestion();
+  </script>
+</body>
+</html>
